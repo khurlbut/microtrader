@@ -2,7 +2,11 @@ package websocketbinance
 
 import "strings"
 
-func url(symbols []string) string {
+const (
+	WebSocketURL = "wss://stream.binance.us:9443"
+)
+
+func Url(symbols []string) string {
 	return WebSocketURL + "/stream?streams=" + streams(symbols)
 }
 

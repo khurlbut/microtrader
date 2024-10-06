@@ -1,20 +1,7 @@
 package websocketbinance
 
-import (
-	"encoding/json"
-	"fmt"
-	"log"
-
-	"github.com/gorilla/websocket"
-)
-
-const (
-	// WebSocketURL represents the URL for the Binance WebSocket API
-	WebSocketURL = "wss://stream.binance.us:9443"
-)
-
-// CombinedStreamMessage represents the wrapper for the TickerData
-type CombinedStreamMessage struct {
+// ResponseData represents the wrapper for the TickerData
+type ResponseData struct {
 	Stream string     `json:"stream"` // Stream name
 	Data   TickerData `json:"data"`   // Data part of the message
 }
@@ -44,33 +31,4 @@ type TickerData struct {
 	FirstTradeID     int64  `json:"F"` // First trade ID
 	LastTradeID      int64  `json:"L"` // Last trade ID
 	NumTrades        int64  `json:"n"` // Number of trades
-}
-
-// ConnectWebSocket connects to the Binance WebSocket API for the given symbols
-func ConnectWebSocket(symbols []string) {
-	fmt.Println("Connecting to URL:", url(symbols))
-
-	c, _, err := websocket.DefaultDialer.Dial(url(symbols), nil)
-	if err != nil {
-		log.Fatal("dial:", err)
-	}
-	defer c.Close()
-
-	for {
-		_, message, err := c.ReadMessage()
-		if err != nil {
-			log.Fatal("read:", err)
-		}
-
-		unmarshal(message)
-	}
-}
-
-func unmarshal(message []byte) CombinedStreamMessage {
-	var combinedStreamMessage CombinedStreamMessage
-	err := json.Unmarshal([]byte(message), &combinedStreamMessage)
-	if err != nil {
-		log.Fatalf("Error unmarshaling message: %v", err)
-	}
-	return combinedStreamMessage
 }

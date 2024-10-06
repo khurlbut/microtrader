@@ -13,7 +13,7 @@ func TestUrl(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-		actual := url(tc.pairs)
+		actual := Url(tc.pairs)
 		if actual != tc.expected {
 			t.Errorf("Expected %q but got %q", tc.expected, actual)
 		}

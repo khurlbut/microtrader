@@ -1,15 +1,33 @@
 package main
 
+import (
+	"fmt"
+	"log"
+
+	"github.com/gorilla/websocket"
+	"github.com/khurlbut/microtrader/websocketbinance"
+)
+
 const (
 	BTCUSDT = "btcusdt"
 )
 
 func main() {
-	// Create a new PriceTracker instance
+	url := websocketbinance.Url([]string{BTCUSDT})
 
-	// Add the symbol BTCUSDT to the PriceTracker instance
+	c, _, err := websocket.DefaultDialer.Dial(url, nil)
+	if err != nil {
+		log.Fatal("dial:", err)
+	}
+	defer c.Close()
 
-	// Start the PriceTracker instance
+	for {
+		_, message, err := c.ReadMessage()
+		if err != nil {
+			log.Fatal("read:", err)
+		}
 
-	// Wait for a signal to stop the PriceTracker instance
+		priceupdate := websocketbinance.ToPriceUpdate(message)
+		fmt.Println(priceupdate)
+	}
 }
