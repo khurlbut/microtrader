@@ -3,7 +3,7 @@ package bank
 import (
 	"fmt"
 
-	f "github.com/khurlbut/triangulator/float"
+	f "github.com/khurlbut/microtrader/float"
 )
 
 // Transaction represents a pseudo bank transaction.
