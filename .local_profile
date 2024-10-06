@@ -1,0 +1,6 @@
+alias b='go install && mv ${GOPATH}/bin/triangulator ${GOPATH}/bin/main'
+alias r='main'
+# alias t='go test ./...'
+alias t='go test ./bank/ && go test ./pricetracker/'
+
+source .private
