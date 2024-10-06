@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/gorilla/websocket"
+)
+
+const (
+	// WebSocketURL represents the URL for the Binance WebSocket API
+	WebSocketURL = "wss://stream.binance.us:9443"
 )
 
 // CombinedStreamMessage represents the wrapper for the TickerData
@@ -44,10 +48,9 @@ type TickerData struct {
 
 // ConnectWebSocket connects to the Binance WebSocket API for the given symbols
 func ConnectWebSocket(symbols []string) {
-	url := "wss://stream.binance.us:9443/stream?streams=" + createCombinedStream(symbols)
+	fmt.Println("Connecting to URL:", url(symbols))
 
-	fmt.Println("Connecting to URL:", url)
-	c, _, err := websocket.DefaultDialer.Dial(url, nil)
+	c, _, err := websocket.DefaultDialer.Dial(url(symbols), nil)
 	if err != nil {
 		log.Fatal("dial:", err)
 	}
@@ -63,20 +66,9 @@ func ConnectWebSocket(symbols []string) {
 	}
 }
 
-// createCombinedStream creates a combined stream URL for the given symbols
-func createCombinedStream(symbols []string) string {
-	fmt.Println("Creating combined stream for symbols:", symbols)
-	// Example: btcusdt@ticker/ethusdt@ticker/solbtc@ticker
-	var streams []string
-	for _, symbol := range symbols {
-		streams = append(streams, symbol+"@ticker")
-	}
-	return strings.Join(streams, "/")
-}
-
-func unmarshal(wrappedData []byte) CombinedStreamMessage {
+func unmarshal(message []byte) CombinedStreamMessage {
 	var combinedStreamMessage CombinedStreamMessage
-	err := json.Unmarshal([]byte(wrappedData), &combinedStreamMessage)
+	err := json.Unmarshal([]byte(message), &combinedStreamMessage)
 	if err != nil {
 		log.Fatalf("Error unmarshaling message: %v", err)
 	}

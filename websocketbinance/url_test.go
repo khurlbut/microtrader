@@ -2,7 +2,25 @@ package websocketbinance
 
 import "testing"
 
-func TestStreamsParam(t *testing.T) {
+func TestUrl(t *testing.T) {
+	testcases := []struct {
+		pairs    []string
+		expected string
+	}{
+		{[]string{"btcusdt"}, "wss://stream.binance.us:9443/stream?streams=btcusdt@ticker"},
+		{[]string{"btcusdt", "ethusdt"}, "wss://stream.binance.us:9443/stream?streams=btcusdt@ticker/ethusdt@ticker"},
+		{[]string{"btcusdt", "ethusdt", "solusdt"}, "wss://stream.binance.us:9443/stream?streams=btcusdt@ticker/ethusdt@ticker/solusdt@ticker"},
+	}
+
+	for _, tc := range testcases {
+		actual := url(tc.pairs)
+		if actual != tc.expected {
+			t.Errorf("Expected %q but got %q", tc.expected, actual)
+		}
+	}
+}
+
+func TestStreams(t *testing.T) {
 	testcases := []struct {
 		pairs    []string
 		expected string
@@ -13,7 +31,7 @@ func TestStreamsParam(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-		actual := streamsParam(tc.pairs)
+		actual := streams(tc.pairs)
 		if actual != tc.expected {
 			t.Errorf("Expected %q but got %q", tc.expected, actual)
 		}
