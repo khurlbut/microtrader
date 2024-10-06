@@ -9,7 +9,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// TickerData represents the structure for the provided JSON data
+// CombinedStreamMessage represents the wrapper for the TickerData
+type CombinedStreamMessage struct {
+	Stream string     `json:"stream"` // Stream name
+	Data   TickerData `json:"data"`   // Data part of the message
+}
+
+// TickerData represents the structure for the JSON data provided by the Binance WebSocket API
 type TickerData struct {
 	EventType        string `json:"e"` // Event type
 	EventTime        int64  `json:"E"` // Event time
@@ -34,12 +40,6 @@ type TickerData struct {
 	FirstTradeID     int64  `json:"F"` // First trade ID
 	LastTradeID      int64  `json:"L"` // Last trade ID
 	NumTrades        int64  `json:"n"` // Number of trades
-}
-
-// CombinedStreamMessage represents the wrapper for the TickerData
-type CombinedStreamMessage struct {
-	Stream string     `json:"stream"` // Stream name
-	Data   TickerData `json:"data"`   // Data part of the message
 }
 
 // ConnectWebSocket connects to the Binance WebSocket API for the given symbols
