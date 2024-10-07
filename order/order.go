@@ -1,4 +1,4 @@
-package purchaseorder
+package order
 
 import (
 	"fmt"
@@ -18,35 +18,36 @@ const (
 	StateExecuted OrderState = "executed"
 )
 
-// PurchaseOrder represents a purchase order.
-type PurchaseOrder struct {
-	PurchaseOrderNumber string
-	Withdrawl           bank.Transaction
+// Order represents a purchase order.
+type Order struct {
+	orderNumber string
+	withdrawl   bank.Transaction
 	// Exchange API order
-	Price pricetracker.Price
-	State OrderState
+	price  pricetracker.Price
+	state  OrderState
+	expire int64
 }
 
-// NewPurchaseOrder creates a new purchase order in the "new" state.
-func NewPurchaseOrder(withdrawl bank.Transaction, price pricetracker.Price) *PurchaseOrder {
-	purchaseOrderNumber, err := identity.GenerateRandomID(16)
+// NewOrder creates a new order in the "new" state.
+func NewOrder(withdrawl bank.Transaction, price pricetracker.Price) *Order {
+	orderNumber, err := identity.GenerateRandomID(16)
 	if err != nil {
 		panic(fmt.Sprintf("failed to generate random purchase order number: %v", err))
 	}
 
-	return &PurchaseOrder{
-		PurchaseOrderNumber: purchaseOrderNumber,
-		Withdrawl:           withdrawl,
-		Price:               price,
-		State:               StateNew,
+	return &Order{
+		orderNumber: orderNumber,
+		withdrawl:   withdrawl,
+		price:       price,
+		state:       StateNew,
 	}
 }
 
 // SetState changes the state of the purchase order, allowing only valid transitions.
-func (po *PurchaseOrder) SetState(newState OrderState) error {
+func (po *Order) SetState(newState OrderState) error {
 	switch newState {
 	case StateNew, StatePlaced, StateExecuted:
-		po.State = newState
+		po.state = newState
 		return nil
 	default:
 		return fmt.Errorf("invalid state transition to %s", newState)

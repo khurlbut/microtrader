@@ -1,4 +1,4 @@
-package purchaseorder
+package order
 
 import (
 	"testing"
@@ -7,20 +7,20 @@ import (
 	"github.com/khurlbut/microtrader/pricetracker"
 )
 
-func TestNewPurchaseOrder(t *testing.T) {
-	po := NewPurchaseOrder(bank.Transaction{}, pricetracker.Price{})
+func TestNewOrder(t *testing.T) {
+	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
 
-	if po.State != StateNew {
-		t.Errorf("expected initial state to be %s, got %s", StateNew, po.State)
+	if po.state != StateNew {
+		t.Errorf("expected initial state to be %s, got %s", StateNew, po.state)
 	}
 
-	if po.PurchaseOrderNumber == "" {
+	if po.orderNumber == "" {
 		t.Error("expected purchase order number to be generated")
 	}
 }
 
 func TestSetState_ValidTransitions(t *testing.T) {
-	po := NewPurchaseOrder(bank.Transaction{}, pricetracker.Price{})
+	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
 
 	validStates := []OrderState{StateNew, StatePlaced, StateExecuted}
 
@@ -29,14 +29,14 @@ func TestSetState_ValidTransitions(t *testing.T) {
 			t.Errorf("unexpected error setting state to %s: %v", state, err)
 		}
 
-		if po.State != state {
-			t.Errorf("expected state to be %s, got %s", state, po.State)
+		if po.state != state {
+			t.Errorf("expected state to be %s, got %s", state, po.state)
 		}
 	}
 }
 
 func TestSetState_InvalidTransition(t *testing.T) {
-	po := NewPurchaseOrder(bank.Transaction{}, pricetracker.Price{})
+	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
 
 	invalidState := OrderState("invalidState")
 
