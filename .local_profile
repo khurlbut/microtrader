@@ -1,6 +1,6 @@
 alias b='go install && mv ${GOPATH}/bin/microtrader ${GOPATH}/bin/main'
 alias r='main'
 # alias t='go test ./...'
-alias t='go test ./bank/ && go test ./pricetracker/ && go test ./websocketbinance'
+alias t='go test ./bank/ && go test ./purchaseorder/ && go test ./pricetracker/ && go test ./websocketbinance'
 
 source .private

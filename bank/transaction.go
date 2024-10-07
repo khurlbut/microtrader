@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	f "github.com/khurlbut/microtrader/float"
+	"github.com/khurlbut/microtrader/identity"
 )
 
 // Transaction represents a pseudo bank transaction.
@@ -30,7 +31,7 @@ func (t *Transaction) fulfill() {
 
 // newWithdrawlTransaction creates a new withdrawl transaction.
 func newWithdrawlTransaction(accountNumber string, amount float64) *Transaction {
-	transactionId, err := generateRandomID(16)
+	transactionId, err := identity.GenerateRandomID(16)
 	if err != nil {
 		panic(fmt.Sprintf("failed to generate random transaction ID: %v", err))
 	}

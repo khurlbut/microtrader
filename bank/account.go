@@ -3,6 +3,8 @@ package bank
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/khurlbut/microtrader/identity"
 )
 
 // Account represents a pseudo bank account.
@@ -16,7 +18,7 @@ type Account struct {
 
 // NewAccount creates a new Cash instance.
 func NewAccount(InitialAmount float64, transactionAmount float64) *Account {
-	accountNumber, err := generateRandomID(16)
+	accountNumber, err := identity.GenerateRandomID(16)
 	if err != nil {
 		panic(fmt.Sprintf("failed to generate random account number: %v", err))
 	}
