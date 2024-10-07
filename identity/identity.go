@@ -1,4 +1,4 @@
-package bank
+package identity
 
 import (
 	"crypto/rand"
@@ -8,7 +8,7 @@ import (
 
 // GenerateRandomID generates a random, unique string ID of specified length.
 // Length here refers to the length of the final string, not the number of bytes.
-func generateRandomID(length int) (string, error) {
+func GenerateRandomID(length int) (string, error) {
 	byteLength := length / 2
 	bytes := make([]byte, byteLength)
 
