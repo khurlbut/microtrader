@@ -28,10 +28,6 @@ func NewOrder(side OrderSide, withdrawl bank.Transaction, price pricetracker.Pri
 	if !side.IsValid() {
 		return nil, fmt.Errorf("invalid order side %q. side must be 'buy' or 'sell'", side)
 	}
-	// s := OrderSide(strings.ToLower(string(side)))
-	// if s != OrderSideBuy && s != OrderSideSell {
-	// 	return nil, fmt.Errorf("invalid order side %q. side must be 'buy' or 'sell'", side)
-	// }
 
 	return &Order{
 		orderNumber: orderNumber,
