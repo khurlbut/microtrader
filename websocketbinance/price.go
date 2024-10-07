@@ -7,12 +7,12 @@ import (
 	"github.com/khurlbut/microtrader/pricetracker"
 )
 
-func ToPriceUpdate(message []byte) *pricetracker.PriceUpdate {
+func ToPrice(message []byte) *pricetracker.Price {
 	responseData := unmarshal(message)
-	return responseData.priceUpdate()
+	return responseData.price()
 }
 
-func (c *ResponseData) priceUpdate() *pricetracker.PriceUpdate {
+func (c *ResponseData) price() *pricetracker.Price {
 	return nil
 }
 
