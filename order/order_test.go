@@ -1,6 +1,7 @@
 package order
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/khurlbut/microtrader/bank"
@@ -8,7 +9,10 @@ import (
 )
 
 func TestNewOrder(t *testing.T) {
-	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
+	po, err := NewOrder(OrderSideBuy, bank.Transaction{}, pricetracker.Price{})
+	if err != nil {
+		t.Errorf("unexpected error creating new order: %v", err)
+	}
 
 	if po.state != StateNew {
 		t.Errorf("expected initial state to be %s, got %s", StateNew, po.state)
@@ -20,7 +24,10 @@ func TestNewOrder(t *testing.T) {
 }
 
 func TestSetState_ValidTransitions(t *testing.T) {
-	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
+	po, err := NewOrder(OrderSideSell, bank.Transaction{}, pricetracker.Price{})
+	if err != nil {
+		t.Errorf("unexpected error creating new order: %v", err)
+	}
 
 	validStates := []OrderState{StateNew, StatePlaced, StateExecuted}
 
@@ -36,11 +43,31 @@ func TestSetState_ValidTransitions(t *testing.T) {
 }
 
 func TestSetState_InvalidTransition(t *testing.T) {
-	po := NewOrder(bank.Transaction{}, pricetracker.Price{})
+	po, err := NewOrder("BUY", bank.Transaction{}, pricetracker.Price{})
+	if err != nil {
+		t.Errorf("unexpected error creating new order: %v", err)
+	}
 
 	invalidState := OrderState("invalidState")
 
 	if err := po.SetState(invalidState); err == nil {
 		t.Errorf("expected an error when setting an invalid state, but got none")
+	}
+}
+
+func TestSideMustBeOrderValid(t *testing.T) {
+	for _, side := range []OrderSide{"BUY", "SELL"} {
+		if _, err := NewOrder(side, bank.Transaction{}, pricetracker.Price{}); err != nil {
+			t.Errorf("unexpected error creating new order: %v", err)
+		}
+
+		side = OrderSide(strings.ToLower(string(side)))
+		if _, err := NewOrder(side, bank.Transaction{}, pricetracker.Price{}); err != nil {
+			t.Errorf("unexpected error creating new order: %v", err)
+		}
+	}
+
+	if _, err := NewOrder("INVALID", bank.Transaction{}, pricetracker.Price{}); err == nil {
+		t.Errorf("expected an error when setting an invalid side, but got none")
 	}
 }
